@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: simple-java
+  temporal:
+    namespace: default
+    connection:
+      target: 127.0.0.1:7233
+    workers:
+      - name: simple-worker
+        task-queue: simple-task-queue
+    workersAutoDiscovery:
+      packages:
+        - com.example.workflows
+        - com.example.activities
+
+#logging:
+#  pattern:
+#    console: "%d{HH:mm:ss.SSS} {%mdc} [%thread] %-5level %logger{36} - %msg %n"
+
+echo:
+  number: 4

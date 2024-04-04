@@ -16,6 +16,3 @@ spring:
 #logging:
 #  pattern:
 #    console: "%d{HH:mm:ss.SSS} {%mdc} [%thread] %-5level %logger{36} - %msg %n"
-
-echo:
-  number: 4

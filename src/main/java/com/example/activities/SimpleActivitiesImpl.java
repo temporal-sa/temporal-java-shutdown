@@ -1,6 +1,7 @@
 package com.example.activities;
 
 import io.temporal.activity.Activity;
+import io.temporal.client.ActivityWorkerShutdownException;
 import io.temporal.spring.boot.ActivityImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class SimpleActivitiesImpl implements SimpleActivities {
     public String aOne(String input) {
         log.info("  BEGIN: aOne activity, input = {}", input);
 
-        sleep(501);
+        sleep(301);
         String result = input;
 
         log.info("  END  : aOne activity, result = {}", result);
@@ -37,16 +38,15 @@ public class SimpleActivitiesImpl implements SimpleActivities {
         try {
             log.info("  BEGIN: bTwo activity, input = {}", input);
 
-            sleep(502);
+            sleep(402);
             result = input;
 
             Activity.getExecutionContext().heartbeat(null);
             log.info("  END  : bTwo activity, result = {}", result);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            return result;
+        } catch (ActivityWorkerShutdownException e) {
+            log.warn("Caught ActivityWorkerShutdownException: {}", e.getMessage());
         }
+        return result;
     }
 
     @Override

@@ -24,20 +24,20 @@ public class SimpleWorkflowImpl implements SimpleWorkflow {
 
     private final SimpleActivities regularActivities =
             Workflow.newActivityStub(SimpleActivities.class, ActivityOptions.newBuilder()
-                    .setStartToCloseTimeout(Duration.ofSeconds(5))
+                    .setStartToCloseTimeout(Duration.ofSeconds(2))
                     .setRetryOptions(retryOptions)
                     .build());
 
     private final SimpleActivities regularActivitiesWithHeartbeatTimeout =
             Workflow.newActivityStub(SimpleActivities.class, ActivityOptions.newBuilder()
-                    .setStartToCloseTimeout(Duration.ofSeconds(8))
-                    .setHeartbeatTimeout(Duration.ofSeconds(5))
+                    .setStartToCloseTimeout(Duration.ofSeconds(4))
+                    .setHeartbeatTimeout(Duration.ofSeconds(2))
                     .setRetryOptions(retryOptions)
                     .build());
 
     private final SimpleActivities localActivities =
             Workflow.newLocalActivityStub(SimpleActivities.class, LocalActivityOptions.newBuilder()
-                    .setStartToCloseTimeout(Duration.ofSeconds(5))
+                    .setStartToCloseTimeout(Duration.ofSeconds(2))
                     .setRetryOptions(retryOptions)
                     .build());
 
@@ -50,13 +50,13 @@ public class SimpleWorkflowImpl implements SimpleWorkflow {
 
             String result1 = regularActivities.aOne(input.getVal());
 
-            log.info("Workflow sleep for 1 second...");
-            Workflow.sleep(Duration.ofSeconds(1));
+            log.info("Workflow sleep for 0.5 seconds...");
+            Workflow.sleep(Duration.ofMillis(500));
 
             String result2 = regularActivitiesWithHeartbeatTimeout.bTwo(result1);
 
-            log.info("Workflow sleep for 1 second...");
-            Workflow.sleep(Duration.ofSeconds(1));
+            log.info("Workflow sleep for 0.5 seconds...");
+            Workflow.sleep(Duration.ofMillis(500));
 
             String result3 = localActivities.cThree(result2);
 
@@ -65,7 +65,7 @@ public class SimpleWorkflowImpl implements SimpleWorkflow {
 
             MDC.remove("simple-id");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Caught workflow exception: {}", e.getMessage(), e);
         }
         return output;
     }

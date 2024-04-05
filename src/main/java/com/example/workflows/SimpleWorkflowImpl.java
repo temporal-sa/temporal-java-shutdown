@@ -50,13 +50,13 @@ public class SimpleWorkflowImpl implements SimpleWorkflow {
 
             String result1 = regularActivities.aOne(input.getVal());
 
-            log.info("Workflow sleep for 3 seconds...");
-            Workflow.sleep(Duration.ofSeconds(3));
+            log.info("Workflow sleep for 1 second...");
+            Workflow.sleep(Duration.ofSeconds(1));
 
             String result2 = regularActivitiesWithHeartbeatTimeout.bTwo(result1);
 
-            log.info("Workflow sleep for 3 seconds...");
-            Workflow.sleep(Duration.ofSeconds(3));
+            log.info("Workflow sleep for 1 second...");
+            Workflow.sleep(Duration.ofSeconds(1));
 
             String result3 = localActivities.cThree(result2);
 

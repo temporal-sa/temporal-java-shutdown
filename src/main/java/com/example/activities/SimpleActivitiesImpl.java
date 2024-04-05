@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 @ActivityImpl(workers = "simple-worker")
 public class SimpleActivitiesImpl implements SimpleActivities {
 
-    private static void sleep(long seconds) {
+    private static void sleep(long ms) {
         try {
-            TimeUnit.SECONDS.sleep(seconds);
+            TimeUnit.MILLISECONDS.sleep(ms);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -24,7 +24,7 @@ public class SimpleActivitiesImpl implements SimpleActivities {
     public String aOne(String input) {
         log.info("  BEGIN: aOne activity, input = {}", input);
 
-        sleep(3);
+        sleep(501);
         String result = input;
 
         log.info("  END  : aOne activity, result = {}", result);
@@ -37,7 +37,7 @@ public class SimpleActivitiesImpl implements SimpleActivities {
         try {
             log.info("  BEGIN: bTwo activity, input = {}", input);
 
-            sleep(3);
+            sleep(502);
             result = input;
 
             Activity.getExecutionContext().heartbeat(null);
@@ -53,7 +53,7 @@ public class SimpleActivitiesImpl implements SimpleActivities {
     public String cThree(String input) {
         log.info("  BEGIN: cThree activity, input = {}", input);
 
-        sleep(3);
+        sleep(503);
         String result = input;
 
         log.info("  END  : cThree activity, result = {}", input);

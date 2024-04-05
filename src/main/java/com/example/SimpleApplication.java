@@ -1,42 +1,40 @@
 package com.example;
 
 import io.temporal.worker.WorkerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.util.StopWatch;
 
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @SpringBootApplication
-public class SimpleApplication implements CommandLineRunner {
-
-    @Autowired
-    private WorkerFactory workerFactory;
+public class SimpleApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SimpleApplication.class, args);
-    }
+        SpringApplication app = new SpringApplication(SimpleApplication.class);
+        app.addListeners((ApplicationListener<ContextClosedEvent>) event -> {
+            log.info("**** ContextClosedEvent received, gracefully shutting down WorkerFactory...");
 
-    @Override
-    public void run(String... args) throws Exception {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("\n\n**** Runtime shutdown hook starting...\n");
+            WorkerFactory workerFactory = event.getApplicationContext().getBean(WorkerFactory.class);
 
-            StopWatch stopWatch = new StopWatch("ShutdownHook");
-
-            stopWatch.start("shutdown()");
+            StopWatch stopWatch = new StopWatch("WorkerFactory");
+            stopWatch.start("shutdown");
+            // Initiate orderly shutdown
             workerFactory.shutdown();
             stopWatch.stop();
 
-            stopWatch.start("awaitTermination()");
-            workerFactory.awaitTermination(30, TimeUnit.SECONDS);
+            stopWatch.start("awaitTermination");
+            // Block until all tasks are completed (or 20 second timeout)
+            workerFactory.awaitTermination(20, TimeUnit.SECONDS);
             stopWatch.stop();
+            log.info(stopWatch.prettyPrint());
 
-            System.out.println("\n" + stopWatch.prettyPrint());
-
-            System.out.println("**** Runtime shutdown hook is done!\n");
-        }));
+            log.info("**** Graceful shutdown complete!");
+        });
+        app.run(args);
     }
 }

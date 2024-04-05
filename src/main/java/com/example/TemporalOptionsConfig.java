@@ -27,7 +27,7 @@ public class TemporalOptionsConfig {
                     @Nonnull String workerName,
                     @Nonnull String taskQueue) {
 
-                optionsBuilder.setStickyTaskQueueDrainTimeout(Duration.ofSeconds(25));
+                optionsBuilder.setStickyTaskQueueDrainTimeout(Duration.ofSeconds(15));
                 return optionsBuilder;
             }
         };
@@ -42,7 +42,7 @@ public class TemporalOptionsConfig {
             @Override
             public WorkflowServiceStubsOptions.Builder customize(
                     @Nonnull WorkflowServiceStubsOptions.Builder optionsBuilder) {
-                optionsBuilder.setRpcLongPollTimeout(Duration.ofSeconds(20));
+                optionsBuilder.setRpcLongPollTimeout(Duration.ofSeconds(10));
                 return optionsBuilder;
             }
         };

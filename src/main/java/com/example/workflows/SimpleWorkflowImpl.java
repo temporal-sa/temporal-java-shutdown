@@ -9,7 +9,6 @@ import io.temporal.common.RetryOptions;
 import io.temporal.spring.boot.WorkflowImpl;
 import io.temporal.workflow.Workflow;
 import org.slf4j.Logger;
-import org.slf4j.MDC;
 
 import java.time.Duration;
 
@@ -45,27 +44,21 @@ public class SimpleWorkflowImpl implements SimpleWorkflow {
     public SimpleOutput execute(SimpleInput input) {
         SimpleOutput output = null;
         try {
-            MDC.put("simple-id", "simple-" + Workflow.randomUUID().toString());
             log.info("BEGIN: Simple workflow, input = {}", input.toString());
 
             String result1 = regularActivities.aOne(input.getVal());
 
-            log.info("Workflow sleep for 0.5 seconds...");
-            Workflow.sleep(Duration.ofMillis(500));
-
             String result2 = regularActivitiesWithHeartbeatTimeout.bTwo(result1);
 
-            log.info("Workflow sleep for 0.5 seconds...");
-            Workflow.sleep(Duration.ofMillis(500));
+            log.info("Workflow sleep for 1 second...");
+            Workflow.sleep(Duration.ofSeconds(1));
 
             String result3 = localActivities.cThree(result2);
 
             output = new SimpleOutput(result3);
             log.info("END: Simple workflow , output = {}", output);
-
-            MDC.remove("simple-id");
         } catch (Exception e) {
-            log.error("Caught workflow exception: {}", e.getMessage(), e);
+            log.error("Caught exception: {}", e.getMessage(), e);
         }
         return output;
     }

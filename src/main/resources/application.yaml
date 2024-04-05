@@ -15,4 +15,5 @@ spring:
 
 #logging:
 #  pattern:
+#    console: "%d{HH:mm:ss.SSS} {%X{WorkflowId} %X{ActivityId}} [%thread] %-5level %logger{36} - %msg %n"
 #    console: "%d{HH:mm:ss.SSS} {%mdc} [%thread] %-5level %logger{36} - %msg %n"

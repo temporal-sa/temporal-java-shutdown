@@ -8,6 +8,6 @@ import io.temporal.workflow.WorkflowMethod;
 @WorkflowInterface
 public interface SimpleWorkflow {
 
-    @WorkflowMethod(name = "SimpleJava")
+    @WorkflowMethod(name = "ShutdownJava")
     SimpleOutput execute(SimpleInput input);
 }

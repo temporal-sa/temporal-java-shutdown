@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 
 import java.time.Duration;
 
-@WorkflowImpl(workers = "simple-worker")
+@WorkflowImpl(workers = "shutdown-worker")
 public class SimpleWorkflowImpl implements SimpleWorkflow {
 
     private static final Logger log = Workflow.getLogger(SimpleWorkflow.class);
@@ -42,24 +42,18 @@ public class SimpleWorkflowImpl implements SimpleWorkflow {
 
     @Override
     public SimpleOutput execute(SimpleInput input) {
-        SimpleOutput output = null;
-        try {
-            log.info("BEGIN: Simple workflow, input = {}", input.toString());
+        log.info("BEGIN: Simple workflow, input = {}", input.toString());
 
-            String result1 = regularActivities.aOne(input.getVal());
+        String result1 = regularActivities.aOne(input.getVal());
+        String result2 = regularActivitiesWithHeartbeatTimeout.bTwo(result1);
 
-            String result2 = regularActivitiesWithHeartbeatTimeout.bTwo(result1);
+        log.info("Workflow sleep for 1 second...");
+        Workflow.sleep(Duration.ofSeconds(1));
 
-            log.info("Workflow sleep for 1 second...");
-            Workflow.sleep(Duration.ofSeconds(1));
+        String result3 = localActivities.cThree(result2);
 
-            String result3 = localActivities.cThree(result2);
-
-            output = new SimpleOutput(result3);
-            log.info("END: Simple workflow , output = {}", output);
-        } catch (Exception e) {
-            log.error("Caught exception: {}", e.getMessage(), e);
-        }
+        SimpleOutput output = new SimpleOutput(result3);
+        log.info("END: Simple workflow , output = {}", output);
         return output;
     }
 }

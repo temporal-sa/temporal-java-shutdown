@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
-@ActivityImpl(workers = "simple-worker")
+@ActivityImpl(workers = "shutdown-worker")
 public class SimpleActivitiesImpl implements SimpleActivities {
 
     private static void sleep(long ms) {

@@ -1,13 +1,13 @@
 spring:
   application:
-    name: simple-java
+    name: temporal-java-shutdown
   temporal:
     namespace: default
     connection:
       target: 127.0.0.1:7233
     workers:
-      - name: simple-worker
-        task-queue: simple-task-queue
+      - name: shutdown-worker
+        task-queue: shutdown-task-queue
     workersAutoDiscovery:
       packages:
         - com.example.workflows

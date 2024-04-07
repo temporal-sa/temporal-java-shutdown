@@ -6,7 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.util.StopWatch;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,23 +16,17 @@ public class SimpleApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(SimpleApplication.class);
         app.addListeners((ApplicationListener<ContextClosedEvent>) event -> {
-            log.info("**** ContextClosedEvent received, gracefully shutting down WorkerFactory...");
+            log.info("\n\n**** ContextClosedEvent received, gracefully shutting down WorkerFactory...\n");
 
             WorkerFactory workerFactory = event.getApplicationContext().getBean(WorkerFactory.class);
 
-            StopWatch stopWatch = new StopWatch("WorkerFactory");
-            stopWatch.start("shutdown");
             // Initiate orderly shutdown
             workerFactory.shutdown();
-            stopWatch.stop();
 
-            stopWatch.start("awaitTermination");
             // Block until all tasks are completed (or 20 second timeout)
             workerFactory.awaitTermination(20, TimeUnit.SECONDS);
-            stopWatch.stop();
-            log.info(stopWatch.prettyPrint());
 
-            log.info("**** Graceful shutdown complete!");
+            log.info("\n\n**** Graceful shutdown complete!\n");
         });
         app.run(args);
     }

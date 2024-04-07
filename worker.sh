@@ -2,7 +2,7 @@
 
 while true
 do
-  java -jar build/libs/simple-java-0.0.1-SNAPSHOT.jar &
+  java -jar build/libs/temporal-java-shutdown-1.0.0.jar &
   PID=$!
   sleep 20
   kill -s TERM $PID

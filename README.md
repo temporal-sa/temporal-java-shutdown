@@ -44,3 +44,48 @@ In a separate terminal, run `./start.sh` to start many workflows in parallel.
 Observe the logs in the terminal windows to see the periodic shutdown and restart of the worker processes.
 In the Temporal UI, you will see all Workflow Executions complete successfully, with no failures, *nor any
 task timeouts*!
+
+## Docker
+
+### Build
+
+```bash
+docker build -t temporal-java-shutdown:1.0.0 .
+```
+
+### Run
+To run against Temporal Cloud, set the environment variables `${TEMPORAL_ADDRESS}`, `${TEMPORAL_NAMESPACE}`, `${TEMPORAL_TLS_CERT}`, `${TEMPORAL_TLS_KEY}` and `${TEMPORAL_TLS_KEY_PKCS8}`.
+
+```bash
+docker run -it --rm \
+  --mount type=bind,source=$TEMPORAL_TLS_KEY_PKCS8,target=/certs/tls.key,readonly \
+  --mount type=bind,source=$TEMPORAL_TLS_CERT,target=/certs/tls.crt,readonly \
+  -e SPRING_PROFILE=tc \
+  -e TEMPORAL_ADDRESS \
+  -e TEMPORAL_NAMESPACE \
+  -e TEMPORAL_TLS_CERT=/certs/tls.crt \
+  -e TEMPORAL_TLS_KEY_PKCS8=/certs/tls.key \
+  temporal-java-shutdown:1.0.0
+```
+
+### Publish
+
+```bash
+docker buildx build --platform linux/amd64,linux/arm64 -t pvsone/temporal-java-shutdown:1.0.0 . --push
+```
+
+## Kubernetes
+
+### Deploy
+
+Create a secret for the TLS client certificate and key
+```bash
+kubectl create secret generic client-credential \
+  --from-file=tls.key=${TEMPORAL_TLS_KEY_PKCS8} \
+  --from-file=tls.crt=${TEMPORAL_TLS_CERT}
+```
+
+Deploy the Worker
+```bash
+envsubst < deploy.yaml | kubectl apply -f -
+```

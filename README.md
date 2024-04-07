@@ -31,13 +31,13 @@ Build the application jar by running `./gradlew bootJar`
 
 ### Run Workers
 
-Open two (or more) terminals and run `./worker.sh` in each terminal. The worker script will, in a continuous
-loop, a) start a worker in a background process, b) wait 20 seconds, and then c) send a `SIGTERM` signal to 
-terminate the process. This will test the worker's ability to handle a graceful shutdown.
+Open two (or more) terminals and run `./scripts/flaky_worker.sh` in each terminal. The script will, in a 
+continuous loop, a) start a worker in a background process, b) wait 20 seconds, and then c) send a `SIGTERM` 
+signal to terminate the process. This will test the worker's ability to handle a graceful shutdown.
 
 ### Start Workflows
 
-In a separate terminal, run `./start.sh` to start many workflows in parallel.
+In a separate terminal, run `./scripts/start.sh` to start many workflows in parallel.
 
 ### Observe the Chaos
 
@@ -89,3 +89,12 @@ Deploy the Worker
 ```bash
 envsubst < deploy.yaml | kubectl apply -f -
 ```
+
+### Chaos Testing
+
+Delete Pods at random to simulate chaos.
+```bash
+for i in {1..20}; do ./scripts/delete_random_pod.sh; sleep 1; done
+```
+
+In a separate terminal, run `./scripts/start.sh` to start many workflows in parallel.

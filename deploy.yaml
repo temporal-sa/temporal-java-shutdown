@@ -5,7 +5,7 @@ metadata:
     app: temporal-java-shutdown
   name: temporal-java-shutdown
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: temporal-java-shutdown
@@ -33,6 +33,7 @@ spec:
             - name: client-credential-volume
               mountPath: /certs
               readOnly: true
+      terminationGracePeriodSeconds: 40
       volumes:
         - name: client-credential-volume
           secret:

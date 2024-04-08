@@ -31,8 +31,8 @@ Build the application jar by running `./gradlew bootJar`
 
 ### Run Workers
 
-Open two (or more) terminals and run `./scripts/flaky_worker.sh` in each terminal. The script will, in a 
-continuous loop, a) start a worker in a background process, b) wait 20 seconds, and then c) send a `SIGTERM` 
+Open two (or more) terminals and run `./scripts/flaky_worker.sh` in each terminal. The script will, in a
+continuous loop, a) start a worker in a background process, b) wait 20 seconds, and then c) send a `SIGTERM`
 signal to terminate the process. This will test the worker's ability to handle a graceful shutdown.
 
 ### Start Workflows
@@ -54,7 +54,10 @@ docker build -t temporal-java-shutdown:1.0.0 .
 ```
 
 ### Run
-To run against Temporal Cloud, set the environment variables `${TEMPORAL_ADDRESS}`, `${TEMPORAL_NAMESPACE}`, `${TEMPORAL_TLS_CERT}`, `${TEMPORAL_TLS_KEY}` and `${TEMPORAL_TLS_KEY_PKCS8}`.
+
+To run against Temporal Cloud, set the environment
+variables `${TEMPORAL_ADDRESS}`, `${TEMPORAL_NAMESPACE}`, `${TEMPORAL_TLS_CERT}`, `${TEMPORAL_TLS_KEY}`
+and `${TEMPORAL_TLS_KEY_PKCS8}`.
 
 ```bash
 docker run -it --rm \
@@ -79,6 +82,7 @@ docker buildx build --platform linux/amd64,linux/arm64 -t pvsone/temporal-java-s
 ### Deploy
 
 Create a secret for the TLS client certificate and key
+
 ```bash
 kubectl create secret generic client-credential \
   --from-file=tls.key=${TEMPORAL_TLS_KEY_PKCS8} \
@@ -86,6 +90,7 @@ kubectl create secret generic client-credential \
 ```
 
 Deploy the Worker
+
 ```bash
 envsubst < deploy.yaml | kubectl apply -f -
 ```
@@ -93,6 +98,7 @@ envsubst < deploy.yaml | kubectl apply -f -
 ### Chaos Testing
 
 Delete Pods at random to simulate chaos.
+
 ```bash
 for i in {1..20}; do ./scripts/delete_random_pod.sh; sleep 1; done
 ```

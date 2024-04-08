@@ -1,4 +1,4 @@
-package com.example;
+package com.example.config;
 
 import com.example.context.MDCContextPropagator;
 import io.temporal.client.WorkflowClientOptions;

@@ -23,10 +23,10 @@ public class SimpleApplication {
     @EventListener
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public void handleContextClosedEventFirst(ContextClosedEvent event) {
-        log.info("\n\n**** ContextClosedEvent received. ORDER(HIGHEST)\n");
+        log.info("**** ContextClosedEvent received. ORDER(HIGHEST)");
         try {
             WorkerFactory workerFactory = event.getApplicationContext().getBean(WorkerFactory.class);
-            log.info("\n\n**** Gracefully shutting down WorkerFactory...\n");
+            log.info("Gracefully shutting down WorkerFactory...");
 
             // Initiate orderly shutdown
             workerFactory.shutdown();
@@ -34,7 +34,7 @@ public class SimpleApplication {
             // Block until all tasks are completed (or 20 second timeout)
             workerFactory.awaitTermination(20, TimeUnit.SECONDS);
 
-            log.info("\n\n**** Graceful shutdown complete!\n");
+            log.info("Graceful shutdown complete!");
         } catch (BeansException e) {
             log.error("Failed to get WorkerFactory bean", e);
         }
@@ -43,10 +43,9 @@ public class SimpleApplication {
     @EventListener
     @Order(Ordered.LOWEST_PRECEDENCE)
     public void handleContextClosedEventLast(ContextClosedEvent event) {
-        log.info("\n\n**** ContextClosedEvent received. ORDER(LOWEST)\n");
+        log.info("**** ContextClosedEvent received. ORDER(LOWEST)");
         WorkerFactory workerFactory = event.getApplicationContext().getBean(WorkerFactory.class);
         log.info("WorkerFactory: Started={}, Shutdown={}, Terminated={}",
                 workerFactory.isStarted(), workerFactory.isShutdown(), workerFactory.isTerminated());
     }
-
 }

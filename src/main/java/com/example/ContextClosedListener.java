@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class ContextClosedListener implements ApplicationListener<ContextClosedEvent> {
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {
-        log.info("\n\n**** ContextClosedEvent received. ORDER(0)\n");
+        log.info("**** ContextClosedEvent received. ORDER(0)");
         WorkerFactory workerFactory = event.getApplicationContext().getBean(WorkerFactory.class);
         log.info("WorkerFactory: Started={}, Shutdown={}, Terminated={}",
                 workerFactory.isStarted(), workerFactory.isShutdown(), workerFactory.isTerminated());

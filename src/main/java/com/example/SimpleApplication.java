@@ -43,6 +43,7 @@ public class SimpleApplication {
     @EventListener
     @Order(Ordered.LOWEST_PRECEDENCE)
     public void handleContextClosedEventLast(ContextClosedEvent event) {
+        // do nothing. this method is just for testing HIGHEST_PRECEDENCE vs. LOWEST_PRECEDENCE
         log.info("**** ContextClosedEvent received. ORDER(LOWEST)");
         WorkerFactory workerFactory = event.getApplicationContext().getBean(WorkerFactory.class);
         log.info("WorkerFactory: Started={}, Shutdown={}, Terminated={}",

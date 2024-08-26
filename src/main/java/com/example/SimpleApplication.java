@@ -10,6 +10,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -17,6 +19,16 @@ import java.util.concurrent.TimeUnit;
 public class SimpleApplication {
 
     public static void main(String[] args) {
+        InetAddress inetAddress = null;
+        try {
+            inetAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+        String hostname = inetAddress.getHostName();
+        System.setProperty("HOSTNAME", hostname);
+        log.info("HOSTNAME={}", hostname);
+        
         SpringApplication.run(SimpleApplication.class, args);
     }
 
